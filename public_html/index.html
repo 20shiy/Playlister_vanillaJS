@@ -45,6 +45,7 @@
         <div id="sidebar-list">
         </div>
         <div id="edit-toolbar">
+            <input type="button" id='add-button' value="+" class="toolbar-button" />
             <input type="button" id='undo-button' value="⟲" class="toolbar-button" />
             <input type="button" id='redo-button' value="⟳" class="toolbar-button" />
             <input type="button" id='close-button' value="&#x2715;" class="toolbar-button" />
@@ -70,6 +71,53 @@
                 </div>
             </div>
         </div>
+
+        <!-- MODAL (i.e. dialog) FOR VERIFYING THE DELETION OF A SONG -->
+        <div class="modal" id="delete-song-modal" data-animation="slideInOutLeft">
+            <div class="modal-root" id='verify-delete-list-root'>
+                <div class="modal-north">
+                    Remove song?
+                </div>                
+                <div class="modal-center">
+                    <div class="modal-center-content">
+                        Are you sure you wish to permanently remove <span id="delete-song-span"></span> from the playlist?
+                    </div>
+                </div>
+                <div class="modal-south">
+                    <input type="button" id="delete-song-confirm-button" class="modal-button" value='Confirm' />
+                    <input type="button" id="delete-song-cancel-button" class="modal-button" value='Cancel' />
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL FOR EDIT SONG -->
+        <div class="modal" id="edit-song-modal" data-animation="slideInOutLeft">
+            <div class="modal-root" id='edit-song-root'>
+                <div class="modal-north">
+                    Edit Song
+                </div>                
+                <div class="modal-center">
+                    <div class="modal-center-content">
+                        <form id="frm">
+                            <div>
+                                <label for="songTitle">Title:</label><br>
+                                <label for="songArtist">Artist:</label><br>
+                                <label for="youtubeId">Youtube ID:</label>
+                            </div>
+                            <div>
+                                <input type="text" id="songTitle" name="songTitle"><br>
+                                <input type="text" id="songArtist" name="songArtist"><br>
+                                <input type="text" id="youtubeId" name="youtubeId">
+                            </div>
+                          </form>
+                    </div>
+                </div>
+                <div class="modal-south">
+                    <input type="button" id="edit-song-confirm-button" class="modal-button" value='Confirm' />
+                    <input type="button" id="edit-song-cancel-button" class="modal-button" value='Cancel' />
+                </div>
+            </div>
+        </div>    
     </div>
 </body>
 

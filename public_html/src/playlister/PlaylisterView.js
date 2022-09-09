@@ -112,10 +112,23 @@ export default class PlaylisterView {
             itemDiv.classList.add("list-card");
             itemDiv.classList.add("unselected-list-card");
             itemDiv.id = "playlist-card-" + (i + 1);
-
+ 
             // PUT THE CONTENT INTO THE CARD
-            let itemText = document.createTextNode(song.title + " by " + song.artist);
-            itemDiv.appendChild(itemText);
+            let itemNum = document.createTextNode((i+1) + ". ")
+            itemDiv.appendChild(itemNum)
+            let hyperlink = document.createElement("a")
+            let itemText = document.createTextNode(song.title + " by " + song.artist)
+            hyperlink.appendChild(itemText)
+            hyperlink.href = "https://www.youtube.com/watch?v=" + song.youTubeId
+            itemDiv.appendChild(hyperlink)
+
+            let deleteSongBtn = document.createElement("input");
+            deleteSongBtn.setAttribute("type", "button");
+            deleteSongBtn.setAttribute("id", "delete-song-" + (i + 1));
+            deleteSongBtn.setAttribute("class", "list-card-button");
+            deleteSongBtn.setAttribute("value", "X");
+
+            itemDiv.appendChild(deleteSongBtn);
 
             // AND PUT THE CARD INTO THE UI
             itemsDiv.appendChild(itemDiv);

@@ -1,6 +1,7 @@
 import jsTPS from "../common/jsTPS.js";
 import Playlist from "./Playlist.js";
 import MoveSong_Transaction from "./transactions/MoveSong_Transaction.js";
+import GeneralSongTransaction from "./transactions/GeneralSongTransaction.js"
 
 /**
  * PlaylisterModel.js
@@ -244,6 +245,50 @@ export default class PlaylisterModel {
         this.saveLists();
     }
 
+    addSong(songIndex) {
+        if(this.hasCurrentList()) {
+            let tempArray = this.currentList.songs;
+            tempArray.splice(songIndex, 0, {"title":"Untitled","artist":"Unknown", "youTubeId":"dQw4w9WgXcQ"})
+            // tempArray.push({"title":"Untitled","artist":"Unknown", "youTubeId":"dQw4w9WgXcQ"})
+            this.currentList.songs = tempArray;
+            this.view.refreshPlaylist(this.currentList);
+        }
+        this.saveLists();
+    }
+
+    editSong(songIndex) {
+        let songTitle = document.getElementById("songTitle").value;
+        let songArtist = document.getElementById("songArtist").value;
+        let youtubeId = document.getElementById("youtubeId").value;
+        
+        let tempArray = this.currentList.songs;
+        console.log("cur list: " + tempArray);
+        tempArray[songIndex].title = songTitle;
+        tempArray[songIndex].artist = songArtist;
+        tempArray[songIndex].youTubeId = youtubeId;
+        this.currentList.songs = tempArray;
+        this.view.refreshPlaylist(this.currentList);
+        this.saveLists();
+
+        this.toggleConfirmDialogOpen();
+
+        // CLOSE THE MODAL
+        let editSongModal = document.getElementById("edit-song-modal")
+        editSongModal.classList.remove("is-visible");
+    }
+
+    deleteSong(songIndex) {
+        this.currentList.songs.splice(songIndex, 1);
+        this.view.refreshPlaylist(this.currentList);
+        this.saveLists();
+
+        this.toggleConfirmDialogOpen();
+
+        // CLOSE THE MODAL
+        let deleteSongModal = document.getElementById("delete-song-modal")
+        deleteSongModal.classList.remove("is-visible");
+    }
+
     // SIMPLE UNDO/REDO FUNCTIONS, NOTE THESE USE TRANSACTIONS
 
     undo() {
@@ -265,6 +310,12 @@ export default class PlaylisterModel {
 
     addMoveSongTransaction(fromIndex, onIndex) {
         let transaction = new MoveSong_Transaction(this, fromIndex, onIndex);
+        this.tps.addTransaction(transaction);
+        this.view.updateToolbarButtons(this);
+    }
+
+    addSongTransaction() {
+        let transaction = new GeneralSongTransaction(this);
         this.tps.addTransaction(transaction);
         this.view.updateToolbarButtons(this);
     }

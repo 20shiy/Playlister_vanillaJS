@@ -162,3 +162,9 @@ body {
 .disabled:hover {
   color: var(--swatch-neutral);
 }
+
+form {
+  display: flex;
+  flex-direction: row;
+  font-size:32pt;
+}

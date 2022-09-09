@@ -51,6 +51,14 @@ export default class PlaylisterController {
             this.model.loadList(newList.id);
             this.model.saveLists();
         }
+
+        //HANDLER FOR ADDING A NEW SONG
+        document.getElementById("add-button").onmousedown = (event) => {
+            let sizeOfSongs = this.model.currentList.songs.length;
+            this.model.addSong(sizeOfSongs);
+            // this.model.addSongTransaction();
+        }
+
         // HANDLER FOR UNDO BUTTON
         document.getElementById("undo-button").onmousedown = (event) => {
             this.model.undo();
@@ -236,6 +244,69 @@ export default class PlaylisterController {
                     && !isNaN(toIndex)) {
                     this.model.addMoveSongTransaction(fromIndex, toIndex);
                 }
+            }
+            
+            let songIndex = 0;
+            //Editing a song
+            card.ondblclick = (event) => {
+                this.ignoreParentClick(event);
+                let fullId = card.id;
+                this.songIndex = Number.parseInt(fullId.split("-")[2]) - 1;
+                let editSongModal = document.getElementById("edit-song-modal")
+                editSongModal.classList.add("is-visible");
+                this.model.toggleConfirmDialogOpen();
+            }
+            
+            //edit song cancel button
+            let editSongCancelButton = document.getElementById("edit-song-cancel-button");
+            editSongCancelButton.onclick = (event) => {
+                this.ignoreParentClick(event);
+                // ALLOW OTHER INTERACTIONS
+                this.model.toggleConfirmDialogOpen();
+                
+                // CLOSE THE MODAL
+                let editSongModal = document.getElementById("edit-song-modal")
+                editSongModal.classList.remove("is-visible");
+                frm.reset();
+            }
+            
+            //edit song confirm button
+            let editSongConfirmButton = document.getElementById("edit-song-confirm-button");
+            let frm = document.getElementById("frm");
+            editSongConfirmButton.onclick = (event) => {
+                this.ignoreParentClick(event);
+                this.model.editSong(this.songIndex)
+                frm.reset();
+            }
+
+            //delete song button
+            document.getElementById("delete-song-" + (i + 1)).onmousedown = (event) => {
+                this.ignoreParentClick(event);
+                this.songIndex = i;
+                let songName = this.model.getSong(i).title;
+                let deleteSpan = document.getElementById("delete-song-span");
+                deleteSpan.innerHTML = "";
+                deleteSpan.appendChild(document.createTextNode(songName));
+                let deleteSongModal = document.getElementById("delete-song-modal");
+                
+                deleteSongModal.classList.add("is-visible");
+                this.model.toggleConfirmDialogOpen();
+            }
+
+            let deleteSongCancelButton = document.getElementById("delete-song-cancel-button");
+            deleteSongCancelButton.onclick = (event) => {
+                this.ignoreParentClick(event);
+                // ALLOW OTHER INTERACTIONS
+                this.model.toggleConfirmDialogOpen();
+                
+                // CLOSE THE MODAL
+                let deleteSongModal = document.getElementById("delete-song-modal")
+                deleteSongModal.classList.remove("is-visible");
+            }
+
+            let deleteSongConfirmBtn = document.getElementById("delete-song-confirm-button");
+            deleteSongConfirmBtn.onclick = (event) => {
+                this.model.deleteSong(this.songIndex);
             }
         }
     }
