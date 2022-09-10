@@ -56,7 +56,7 @@ export default class PlaylisterController {
         document.getElementById("add-button").onmousedown = (event) => {
             let sizeOfSongs = this.model.currentList.songs.length;
             this.model.addSong(sizeOfSongs);
-            // this.model.addSongTransaction();
+            // this.model.addSongTransaction(sizeOfSongs);
         }
 
         // HANDLER FOR UNDO BUTTON
@@ -69,6 +69,7 @@ export default class PlaylisterController {
         }
         // HANDLER FOR CLOSE LIST BUTTON
         document.getElementById("close-button").onmousedown = (event) => {
+            this.model.confirmListLoaded = false;
             this.model.unselectAll();
             this.model.unselectCurrentList();
         }
@@ -91,7 +92,7 @@ export default class PlaylisterController {
 
             // DELETE THE LIST, THIS IS NOT UNDOABLE
             this.model.deleteList(deleteListId);
-
+ 
             // ALLOW OTHER INTERACTIONS
             this.model.toggleConfirmDialogOpen();
 
@@ -126,6 +127,7 @@ export default class PlaylisterController {
     registerListSelectHandlers(id) {
         // HANDLES SELECTING A PLAYLIST
         document.getElementById("playlist-" + id).onmousedown = (event) => {
+            this.model.confirmListLoaded = true;
             // MAKE SURE NOTHING OLD IS SELECTED
             this.model.unselectAll();
 
@@ -156,6 +158,7 @@ export default class PlaylisterController {
         }
         // FOR RENAMING THE LIST NAME
         document.getElementById("list-card-text-" + id).ondblclick = (event) => {
+            this.model.blurConfirmInputEdited();
             let text = document.getElementById("list-card-text-" + id)
             // CLEAR THE TEXT
             text.innerHTML = "";
@@ -177,13 +180,15 @@ export default class PlaylisterController {
             }
             textInput.onkeydown = (event) => {
                 if (event.key === 'Enter') {
+                    this.model.blurConfirmInputEdited();
                     this.model.renameCurrentList(event.target.value, id);
                     this.model.refreshToolbar();
                 }
             }
             textInput.onblur = (event) => {
+                this.model.blurConfirmInputEdited();
                 this.model.renameCurrentList(event.target.value, id);
-                this.model.refreshToolbar();
+                this.model.refreshToolbar()
             }
             textInput.focus();
             let temp = textInput.value;

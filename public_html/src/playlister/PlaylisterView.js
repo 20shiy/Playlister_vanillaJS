@@ -18,9 +18,10 @@ export default class PlaylisterView {
     init() {
         // @todo - ONCE YOU IMPLEMENT THE FOOLPROOF DESIGN STUFF YOU SHOULD PROBABLY
         // START THESE BUTTONS OFF AS DISABLED
-        this.enableButton('undo-button');
-        this.enableButton('redo-button');
-        this.enableButton('close-button');
+        this.disableButton('undo-button');
+        this.disableButton('redo-button');
+        this.disableButton('close-button');
+        this.disableButton('add-button');
     }
 
     /*
@@ -213,7 +214,35 @@ export default class PlaylisterView {
             this.disableButton("undo-button");
             this.disableButton("redo-button");
             this.disableButton("close-button");
+            this.disableButton('add-button');
+        } else {
+            if(model.confirmInputEdited) {
+                this.disableButton("add-list-button");
+            } else {
+                this.enableButton("add-list-button");
+            }
+
+            if(model.confirmListLoaded) {
+                this.enableButton("close-button");
+                this.enableButton("add-button");
+            } else {
+                this.disableButton("close-button");
+                this.disableButton("add-button");
+            }
+
+            if(tps.hasTransactionToRedo()) {
+                this.enableButton("redo-button");
+            } else {
+                this.disableButton("redo-button");
+            }
+
+            if(tps.hasTransactionToUndo()) {
+                this.enableButton("undo-button");
+            } else {
+                this.disableButton("undo-button");
+            }
         }
+        
     }
 
     /*

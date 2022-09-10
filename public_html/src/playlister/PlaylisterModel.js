@@ -1,7 +1,7 @@
 import jsTPS from "../common/jsTPS.js";
 import Playlist from "./Playlist.js";
 import MoveSong_Transaction from "./transactions/MoveSong_Transaction.js";
-import GeneralSongTransaction from "./transactions/GeneralSongTransaction.js"
+// import GeneralSongTransaction from "./transactions/GeneralSongTransaction.js"
 
 /**
  * PlaylisterModel.js
@@ -39,6 +39,12 @@ export default class PlaylisterModel {
 
         // THE MODAL IS NOT CURRENTLY OPEN
         this.confirmDialogOpen = false;
+
+        //input is not currently being edited
+        this.confirmInputEdited = false;
+        
+        //list is not loaded
+        this.confirmListLoaded = false;
     }
 
     // FOR MVC STUFF
@@ -90,6 +96,18 @@ export default class PlaylisterModel {
         this.view.updateToolbarButtons(this);
         return this.confirmDialogOpen;
     }
+
+    blurConfirmInputEdited() {
+        this.confirmInputEdited = !this.confirmInputEdited;
+        this.view.updateToolbarButtons(this);
+        return this.confirmInputEdited;
+    }
+
+    // funcConfirmListLoaded() {
+    //     this.confirmListLoaded = !this.confirmListLoaded;
+    //     this.view.updateToolbarButtons(this);
+    //     return this.confirmListLoaded;
+    // }
 
     // THESE ARE THE FUNCTIONS FOR MANAGING ALL THE LISTS
 
@@ -314,8 +332,20 @@ export default class PlaylisterModel {
         this.view.updateToolbarButtons(this);
     }
 
-    addSongTransaction() {
-        let transaction = new GeneralSongTransaction(this);
+    addSongTransaction(songIndex) {
+        let transaction = new AddSong_Transaction(this, songIndex);
+        this.tps.addTransaction(transaction);
+        this.view.updateToolbarButtons(this);
+    }
+
+    editSongTransaction(songIndex) {
+        let transaction = new EditSong_Transaction(this, songIndex);
+        this.tps.addTransaction(transaction);
+        this.view.updateToolbarButtons(this);
+    }
+
+    removeSongTransaction(songIndex) {
+        let transaction = new RemoveSong_Transaction(this, songIndex);
         this.tps.addTransaction(transaction);
         this.view.updateToolbarButtons(this);
     }
