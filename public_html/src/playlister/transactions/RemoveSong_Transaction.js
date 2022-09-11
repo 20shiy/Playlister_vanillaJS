@@ -27,5 +27,6 @@ export default class RemoveSong_Transaction extends jsTPS_Transaction {
     
     undoTransaction() {
         this.model.addSong(this.songIndex, this.songTobeRemove);
+        this.model.callingRedo = false; 
     }
 }

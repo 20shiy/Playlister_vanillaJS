@@ -18,9 +18,11 @@ export default class AddSong_Transaction extends jsTPS_Transaction {
 
     doTransaction() {
         this.model.addSong(this.songIndex, this.song);
+        this.model.callingRedo = false; 
     }
     
     undoTransaction() {
         this.model.deleteSongWithoutToggle(this.songIndex);
+        this.model.callingRedo = false; 
     }
 }

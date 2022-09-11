@@ -18,9 +18,11 @@ export default class MoveSong_Transaction extends jsTPS_Transaction {
 
     doTransaction() {
         this.model.moveSong(this.oldIndex, this.newIndex);
+        this.model.callingRedo = false; 
     }
     
     undoTransaction() {
         this.model.moveSong(this.newIndex, this.oldIndex);
+        this.model.callingRedo = false; 
     }
 }

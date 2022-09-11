@@ -279,9 +279,20 @@ export default class PlaylisterController {
             //edit song confirm button
             let editSongConfirmButton = document.getElementById("edit-song-confirm-button");
             let frm = document.getElementById("frm");
+            let oldSong;
+            let newSong;
             editSongConfirmButton.onclick = (event) => {
                 this.ignoreParentClick(event);
-                this.model.editSong(this.songIndex)
+                this.oldSong = this.model.currentList.getSongAt(this.songIndex);
+                // this.newSong = this.model.currentList.getSongAt(this.songIndex);
+                let songTitle = document.getElementById("songTitle").value;
+                let songArtist = document.getElementById("songArtist").value;
+                let youtubeId = document.getElementById("youtubeId").value;
+                this.newSong = {"title":songTitle, "artist":songArtist, "youTubeId":youtubeId};
+                
+                // this.model.editSong(this.songIndex, this.oldSong, this.newSong);
+                this.model.editSongTransaction(this.songIndex, this.oldSong, this.newSong);
+                // this.model.editSongTransaction(this.songIndex, this.oldSong, this.newSong);
                 frm.reset();
             }
 
@@ -313,12 +324,11 @@ export default class PlaylisterController {
             let deleteSongConfirmBtn = document.getElementById("delete-song-confirm-button");
             let songTobeRemove;
             deleteSongConfirmBtn.onclick = (event) => {
-                // let songTobeRemove = this.model.currentList.getSongAt(this.songIndex);
                 this.songTobeRemove = this.model.currentList.getSongAt(this.songIndex);
-                console.log(this.songTobeRemove);
-                // let songCopy = songTobeRemove;
-                // this.model.deleteSong(this.songIndex, this.songTobeRemove);
                 this.model.removeSongTransaction(this.songIndex, this.songTobeRemove);
+                // CLOSE THE MODAL
+                let deleteSongModal = document.getElementById("delete-song-modal")
+                deleteSongModal.classList.remove("is-visible");
             }
         }
     }

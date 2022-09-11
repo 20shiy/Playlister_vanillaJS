@@ -274,27 +274,41 @@ export default class PlaylisterModel {
         }
         this.saveLists();
     }
-
-    editSong(songIndex) {
-        let songTitle = document.getElementById("songTitle").value;
-        let songArtist = document.getElementById("songArtist").value;
-        let youtubeId = document.getElementById("youtubeId").value;
+//this.model.editSong(this.songIndex, this.oldSong, this.newSong);
+    editSong(songIndex, oldSong, newSong) {
+        // let songTitle = document.getElementById("songTitle").value;
+        // let songArtist = document.getElementById("songArtist").value;
+        // let youtubeId = document.getElementById("youtubeId").value;
         
         let tempArray = this.currentList.songs;
-        console.log("cur list: " + tempArray);
-        tempArray[songIndex].title = songTitle;
-        tempArray[songIndex].artist = songArtist;
-        tempArray[songIndex].youTubeId = youtubeId;
+        // this.oldSong = tempArray[songIndex];
+        // tempArray[songIndex].title = songTitle;
+        // tempArray[songIndex].artist = songArtist;
+        // tempArray[songIndex].youTubeId = youtubeId;
+        // this.newSong = tempArray[songIndex];
+        tempArray.splice(songIndex, 1, newSong);
         this.currentList.songs = tempArray;
         this.view.refreshPlaylist(this.currentList);
         this.saveLists();
+        // this.editSongTransaction(this.songIndex, this.oldSong, this.newSong);
 
-        this.toggleConfirmDialogOpen();
-
+        if(!this.callingRedo) {
+            this.toggleConfirmDialogOpen();
+        }
+        
         // CLOSE THE MODAL
         let editSongModal = document.getElementById("edit-song-modal")
         editSongModal.classList.remove("is-visible");
     }
+
+    // editSongRedo(songIndex, oldSong, newSong) {
+    //     let tempArray = this.currentList.songs;
+    //     this.oldSong = this.newSong;
+    //     tempArray[songIndex] = this.newSong;
+    //     this.currentList.songs = tempArray;
+    //     this.view.refreshPlaylist(this.currentList);
+    //     this.saveLists();
+    // }
 
     deleteSong(songIndex, songTobeRemove) {
         this.currentList.songs.splice(songIndex, 1);
@@ -318,6 +332,7 @@ export default class PlaylisterModel {
 
     undo() {
         if (this.tps.hasTransactionToUndo()) {
+            this.callingRedo = true;
             this.tps.undoTransaction();
             this.view.updateToolbarButtons(this);
         }
@@ -346,8 +361,8 @@ export default class PlaylisterModel {
         this.view.updateToolbarButtons(this);
     }
 
-    editSongTransaction(songIndex) {
-        let transaction = new EditSong_Transaction(this, songIndex);
+    editSongTransaction(songIndex, oldSong, newSong) {
+        let transaction = new EditSong_Transaction(this, songIndex, oldSong, newSong);
         this.tps.addTransaction(transaction);
         this.view.updateToolbarButtons(this);
     }
