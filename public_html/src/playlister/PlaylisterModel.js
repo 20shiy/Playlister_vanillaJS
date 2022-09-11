@@ -48,6 +48,9 @@ export default class PlaylisterModel {
         
         //list is not loaded
         this.confirmListLoaded = false;
+
+        //calling redo function
+        this.callingRedo = false;
     }
 
     // FOR MVC STUFF
@@ -322,6 +325,7 @@ export default class PlaylisterModel {
 
     redo() {
         if (this.tps.hasTransactionToRedo()) {
+            this.callingRedo = true;
             this.tps.doTransaction();
             this.view.updateToolbarButtons(this);
         }

@@ -311,11 +311,14 @@ export default class PlaylisterController {
             }
 
             let deleteSongConfirmBtn = document.getElementById("delete-song-confirm-button");
+            let songTobeRemove;
             deleteSongConfirmBtn.onclick = (event) => {
-                let songTobeRemove = this.model.currentList.getSongAt(this.songIndex);
-                console.log(songTobeRemove);
-                this.model.deleteSong(this.songIndex, this.songTobeRemove);
-                // this.model.removeSongTransaction(this.songIndex, this.songTobeRemove);
+                // let songTobeRemove = this.model.currentList.getSongAt(this.songIndex);
+                this.songTobeRemove = this.model.currentList.getSongAt(this.songIndex);
+                console.log(this.songTobeRemove);
+                // let songCopy = songTobeRemove;
+                // this.model.deleteSong(this.songIndex, this.songTobeRemove);
+                this.model.removeSongTransaction(this.songIndex, this.songTobeRemove);
             }
         }
     }

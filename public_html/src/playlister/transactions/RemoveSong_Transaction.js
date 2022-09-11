@@ -17,11 +17,15 @@ export default class RemoveSong_Transaction extends jsTPS_Transaction {
     }
 
     doTransaction() {
-        this.model.deleteSong(this.songIndex, this.songTobeRemove);
+        if(this.model.callingRedo) {
+            this.model.deleteSongWithoutToggle(this.songIndex, this.songTobeRemove);
+        } else {
+            this.model.deleteSong(this.songIndex, this.songTobeRemove);
+        }
+        this.model.callingRedo = false; 
     }
     
     undoTransaction() {
-        console.log("inside undo transaction; " + "song name: " + songTobeRemove.title);
         this.model.addSong(this.songIndex, this.songTobeRemove);
     }
 }
