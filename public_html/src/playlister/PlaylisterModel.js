@@ -2,6 +2,9 @@ import jsTPS from "../common/jsTPS.js";
 import Playlist from "./Playlist.js";
 import MoveSong_Transaction from "./transactions/MoveSong_Transaction.js";
 // import GeneralSongTransaction from "./transactions/GeneralSongTransaction.js"
+import AddSong_Transaction from "./transactions/AddSong_Transaction.js";
+import EditSong_Transaction from "./transactions/EditSong_Transaction.js";
+import RemoveSong_Transaction from "./transactions/RemoveSong_Transaction.js";
 
 /**
  * PlaylisterModel.js
@@ -102,12 +105,6 @@ export default class PlaylisterModel {
         this.view.updateToolbarButtons(this);
         return this.confirmInputEdited;
     }
-
-    // funcConfirmListLoaded() {
-    //     this.confirmListLoaded = !this.confirmListLoaded;
-    //     this.view.updateToolbarButtons(this);
-    //     return this.confirmListLoaded;
-    // }
 
     // THESE ARE THE FUNCTIONS FOR MANAGING ALL THE LISTS
 
@@ -263,11 +260,12 @@ export default class PlaylisterModel {
         this.saveLists();
     }
 
-    addSong(songIndex) {
+    addSong(songIndex, song) {
         if(this.hasCurrentList()) {
             let tempArray = this.currentList.songs;
-            tempArray.splice(songIndex, 0, {"title":"Untitled","artist":"Unknown", "youTubeId":"dQw4w9WgXcQ"})
+            tempArray.splice(songIndex, 0, song)
             // tempArray.push({"title":"Untitled","artist":"Unknown", "youTubeId":"dQw4w9WgXcQ"})
+            console.log(tempArray);
             this.currentList.songs = tempArray;
             this.view.refreshPlaylist(this.currentList);
         }
@@ -295,7 +293,7 @@ export default class PlaylisterModel {
         editSongModal.classList.remove("is-visible");
     }
 
-    deleteSong(songIndex) {
+    deleteSong(songIndex, songTobeRemove) {
         this.currentList.songs.splice(songIndex, 1);
         this.view.refreshPlaylist(this.currentList);
         this.saveLists();
@@ -305,6 +303,12 @@ export default class PlaylisterModel {
         // CLOSE THE MODAL
         let deleteSongModal = document.getElementById("delete-song-modal")
         deleteSongModal.classList.remove("is-visible");
+    }
+
+    deleteSongWithoutToggle(songIndex) {
+        this.currentList.songs.splice(songIndex, 1);
+        this.view.refreshPlaylist(this.currentList);
+        this.saveLists();
     }
 
     // SIMPLE UNDO/REDO FUNCTIONS, NOTE THESE USE TRANSACTIONS
@@ -332,8 +336,8 @@ export default class PlaylisterModel {
         this.view.updateToolbarButtons(this);
     }
 
-    addSongTransaction(songIndex) {
-        let transaction = new AddSong_Transaction(this, songIndex);
+    addSongTransaction(songIndex, song) {
+        let transaction = new AddSong_Transaction(this, songIndex, song);
         this.tps.addTransaction(transaction);
         this.view.updateToolbarButtons(this);
     }
@@ -344,8 +348,8 @@ export default class PlaylisterModel {
         this.view.updateToolbarButtons(this);
     }
 
-    removeSongTransaction(songIndex) {
-        let transaction = new RemoveSong_Transaction(this, songIndex);
+    removeSongTransaction(songIndex, songTobeRemove) {
+        let transaction = new RemoveSong_Transaction(this, songIndex, songTobeRemove);
         this.tps.addTransaction(transaction);
         this.view.updateToolbarButtons(this);
     }

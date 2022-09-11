@@ -55,8 +55,9 @@ export default class PlaylisterController {
         //HANDLER FOR ADDING A NEW SONG
         document.getElementById("add-button").onmousedown = (event) => {
             let sizeOfSongs = this.model.currentList.songs.length;
-            this.model.addSong(sizeOfSongs);
+            // this.model.addSong(sizeOfSongs, {"title":"Untitled","artist":"Unknown", "youTubeId":"dQw4w9WgXcQ"});
             // this.model.addSongTransaction(sizeOfSongs);
+            this.model.addSongTransaction(sizeOfSongs, {"title":"Untitled","artist":"Unknown", "youTubeId":"dQw4w9WgXcQ"});
         }
 
         // HANDLER FOR UNDO BUTTON
@@ -311,7 +312,10 @@ export default class PlaylisterController {
 
             let deleteSongConfirmBtn = document.getElementById("delete-song-confirm-button");
             deleteSongConfirmBtn.onclick = (event) => {
-                this.model.deleteSong(this.songIndex);
+                let songTobeRemove = this.model.currentList.getSongAt(this.songIndex);
+                console.log(songTobeRemove);
+                this.model.deleteSong(this.songIndex, this.songTobeRemove);
+                // this.model.removeSongTransaction(this.songIndex, this.songTobeRemove);
             }
         }
     }
