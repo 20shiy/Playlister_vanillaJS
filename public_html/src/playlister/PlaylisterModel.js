@@ -268,7 +268,6 @@ export default class PlaylisterModel {
             let tempArray = this.currentList.songs;
             tempArray.splice(songIndex, 0, song)
             // tempArray.push({"title":"Untitled","artist":"Unknown", "youTubeId":"dQw4w9WgXcQ"})
-            console.log(tempArray);
             this.currentList.songs = tempArray;
             this.view.refreshPlaylist(this.currentList);
         }

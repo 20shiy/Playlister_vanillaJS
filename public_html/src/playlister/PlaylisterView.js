@@ -216,19 +216,23 @@ export default class PlaylisterView {
             this.disableButton("close-button");
             this.disableButton('add-button');
         } else {
-            if(model.confirmInputEdited) {
+            if(model.hasCurrentList()) {
                 this.disableButton("add-list-button");
-            } else {
-                this.enableButton("add-list-button");
-            }
-
-            if(model.confirmListLoaded) {
                 this.enableButton("close-button");
                 this.enableButton("add-button");
             } else {
+                this.enableButton("add-list-button");
                 this.disableButton("close-button");
                 this.disableButton("add-button");
             }
+
+            // if(model.confirmListLoaded) {
+            //     this.enableButton("close-button");
+            //     this.enableButton("add-button");
+            // } else {
+            //     this.disableButton("close-button");
+            //     this.disableButton("add-button");
+            // }
 
             if(tps.hasTransactionToRedo()) {
                 this.enableButton("redo-button");

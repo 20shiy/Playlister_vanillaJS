@@ -159,7 +159,7 @@ export default class PlaylisterController {
         }
         // FOR RENAMING THE LIST NAME
         document.getElementById("list-card-text-" + id).ondblclick = (event) => {
-            this.model.blurConfirmInputEdited();
+            // this.model.blurConfirmInputEdited();
             let text = document.getElementById("list-card-text-" + id)
             // CLEAR THE TEXT
             text.innerHTML = "";
@@ -254,11 +254,24 @@ export default class PlaylisterController {
             
             let songIndex = 0;
             //Editing a song
+            let inputbox1 = document.getElementById("songTitle");
+            let inputbox2 = document.getElementById("songArtist");
+            let inputbox3 = document.getElementById("youtubeId");
+            let str1;
+            let str2;
+            let str3;
             card.ondblclick = (event) => {
                 this.ignoreParentClick(event);
                 let fullId = card.id;
                 this.songIndex = Number.parseInt(fullId.split("-")[2]) - 1;
-                let editSongModal = document.getElementById("edit-song-modal")
+                let editSongModal = document.getElementById("edit-song-modal");
+                
+                inputbox1.value = this.model.currentList.songs[this.songIndex].title;
+                inputbox2.value = this.model.currentList.songs[this.songIndex].artist;
+                inputbox3.value = this.model.currentList.songs[this.songIndex].youTubeId;
+                this.str1 = inputbox1.value;
+                this.str2 = inputbox2.value;
+                this.str3 = inputbox3.value;
                 editSongModal.classList.add("is-visible");
                 this.model.toggleConfirmDialogOpen();
             }
@@ -288,11 +301,21 @@ export default class PlaylisterController {
                 let songTitle = document.getElementById("songTitle").value;
                 let songArtist = document.getElementById("songArtist").value;
                 let youtubeId = document.getElementById("youtubeId").value;
-                this.newSong = {"title":songTitle, "artist":songArtist, "youTubeId":youtubeId};
-                
-                // this.model.editSong(this.songIndex, this.oldSong, this.newSong);
-                this.model.editSongTransaction(this.songIndex, this.oldSong, this.newSong);
-                // this.model.editSongTransaction(this.songIndex, this.oldSong, this.newSong);
+    
+                if(songTitle == '' && songArtist == '' && youtubeId == '') {
+                    this.newSong = {"title":"Untitled", "artist":"Unknown", "youTubeId":"dQw4w9WgXcQ"};
+                    this.model.editSongTransaction(this.songIndex, this.oldSong, this.newSong);
+                } 
+                else if(songTitle == this.str1 && songArtist == this.str2 && youtubeId == this.str3) {
+                    this.model.toggleConfirmDialogOpen();
+                    let editSongModal = document.getElementById("edit-song-modal")
+                    editSongModal.classList.remove("is-visible");
+                    frm.reset();
+                } 
+                else {
+                    this.newSong = {"title":songTitle, "artist":songArtist, "youTubeId":youtubeId};
+                    this.model.editSongTransaction(this.songIndex, this.oldSong, this.newSong);
+                }
                 frm.reset();
             }
 
